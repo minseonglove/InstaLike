@@ -1,0 +1,13 @@
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\bin\Debug\InstaLike.exe.config
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\bin\Debug\InstaLike.exe
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\bin\Debug\InstaLike.pdb
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\bin\Debug\WebDriver.dll
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\bin\Debug\WebDriver.xml
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\obj\Debug\InstaLike.csproj.AssemblyReference.cache
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\obj\Debug\InstaLike.Form1.resources
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\obj\Debug\InstaLike.Properties.Resources.resources
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\obj\Debug\InstaLike.csproj.GenerateResource.cache
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\obj\Debug\InstaLike.csproj.CoreCompileInputs.cache
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\obj\Debug\InstaLike.csproj.CopyComplete
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\obj\Debug\InstaLike.exe
+C:\Users\Minseong\source\repos\InstaLike\InstaLike\obj\Debug\InstaLike.pdb
