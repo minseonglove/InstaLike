@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Threading;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace InstaLike
 {
@@ -38,26 +33,34 @@ namespace InstaLike
             {
                 if (!otp_flag)
                 {
-                    _service = ChromeDriverService.CreateDefaultService();
-                    _service.HideCommandPromptWindow = true;
-                    _driver = new ChromeDriver(_service);
+                    if (_driver == null)
+                    {
+                        _service = ChromeDriverService.CreateDefaultService();
+                        _service.HideCommandPromptWindow = true;
+                        _driver = new ChromeDriver(_service);
 
-                    url = "https://www.instagram.com";
-
+                        url = "https://www.instagram.com";
+                    }
                     //로그인
                     _driver.Navigate().GoToUrl(url);
                     _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
-                    var email_box = _driver.FindElement(By.XPath("//*[@id='loginForm']/div/div[1]/div/label/input"));
+                    var email_box = _driver.FindElement(By.Name("username"));
                     email_box.SendKeys(input_email.Text);
-                    var pass_box = _driver.FindElement(By.XPath("//*[@id='loginForm']/div/div[2]/div/label/input"));
+                    var pass_box = _driver.FindElement(By.Name("password"));
                     pass_box.SendKeys(input_pwd.Text);
-                    var login_btn = _driver.FindElement(By.XPath("//*[@id='loginForm']/div/div[3]/button"));
-                    login_btn.Click();
+                    var login_btn = _driver.FindElements(By.TagName("button"));
+                    for(int i = 0; i < login_btn.Count; i++)
+                    {
+                        if (login_btn[i].GetAttribute("type").Equals("submit"))
+                        {
+                            login_btn[i].Click();
+                            break;
+                        }
+                    }
                 }
                 if (!is_otp)
                 {
-                    _driver.FindElement(By.XPath("/html/body/div[5]/div/div/div/div[3]/button[2]")).Click();
                     lb_state.Text = "로그인 성공";
                     login_flag = true;
                 }
@@ -65,11 +68,9 @@ namespace InstaLike
                 {
                     if (otp_flag)
                     {
-                        //*[@id="react-root"]/section/main/article/div[2]/div[1]/div/form/div[1]/div/label/input
-                        var otp_box = _driver.FindElement(By.XPath("//*[@id='react-root']/section/main/div/div/div[1]/div/form/div[1]/div/label/input"));
+                        var otp_box = _driver.FindElement(By.Name("verificationCode"));
                         otp_box.SendKeys(input_otp.Text);
-                        _driver.FindElement(By.XPath("//*[@id='react-root']/section/main/div/div/div[1]/div/form/div[2]/button")).Click();
-                        _driver.FindElement(By.XPath("/html/body/div[5]/div/div/div/div[3]/button[2]")).Click();
+                        _driver.FindElement(By.TagName("button")).Click();
                         lb_state.Text = "로그인 성공";
                         login_flag = true;
                     }
@@ -142,7 +143,7 @@ namespace InstaLike
                     while (is_running) { }
                     url = "https://www.instagram.com/explore/tags/" + input_tag.Text;
                     _driver.Navigate().GoToUrl(url);
-                    var image_btn = _driver.FindElement(By.XPath("//*[@id='react-root']/section/main/article/div[2]/div/div[1]/div[1]/a"));
+                    var image_btn = _driver.FindElement(By.CssSelector("#react-root > section > main > article > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1) > a"));
                     image_btn.Click();
                     Thread th = new Thread(() =>
                     {
@@ -156,20 +157,38 @@ namespace InstaLike
                         {
                             str = "남은 개수 : " + limit + "개";
                             CrossThread(lb_state, str);
-                            IWebElement like_btn = _driver.FindElement(By.XPath("//article/div[3]/section[1]/span[1]/button"));
-                            like_btn.Click();
+                            ReadOnlyCollection<IWebElement> svgs = _driver.FindElements(By.TagName("svg"));
+                            IWebElement nextBtn = null;
+                            bool likeCheck = false;
+                            bool nextBtnCheck = false;
+                            for (int i = 0; i < svgs.Count; i++)
+                            {
+                                string label = svgs[i].GetAttribute("aria-label");
+                                if (label.Equals("좋아요") && svgs[i].GetAttribute("color").Equals("#262626"))
+                                {
+                                    svgs[i].FindElement(By.XPath("..")).FindElement(By.XPath("..")).FindElement(By.XPath("..")).Click();
+                                    likeCheck = true;
+                                }
+                                else if (label.Equals("다음"))
+                                {
+                                    nextBtn = svgs[i].FindElement(By.XPath("..")).FindElement(By.XPath("..")).FindElement(By.XPath(".."));
+                                    nextBtnCheck = true;
+                                }
+                                if (likeCheck && nextBtnCheck)
+                                    break;
+                            }
                             Thread.Sleep(min_sleep + rand.Next(max_sleep - min_sleep));
-                            IWebElement next_btn = _driver.FindElement(By.XPath("/html/body/div[6]/div[1]/div/div/a[2]"));
-                            next_btn.Click();
+                            nextBtn.Click();
                             Thread.Sleep(min_sleep + rand.Next(max_sleep - min_sleep));
                             limit--;
                             //일지정지용 무한루프
                             while (stop_flag)
                             {
-                                if (!force_stop)
+                                if (force_stop)
                                     break;
                             }
                         }
+                        CrossThread(lb_state, "종료");
                         is_running = false;
                     });
                     th.Start();
@@ -197,9 +216,10 @@ namespace InstaLike
 
         public static void CrossThread(Control item, String msg)
         {
+            item.Text = msg;
             if (item.InvokeRequired)
             {
-                item.BeginInvoke(new MethodInvoker(delegate ()
+                item.BeginInvoke((System.Action)(() =>
                 {
                     item.Text = msg;
                 }));
