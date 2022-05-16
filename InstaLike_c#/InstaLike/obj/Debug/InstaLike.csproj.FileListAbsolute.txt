@@ -28,7 +28,6 @@ C:\Users\qnfpd\insta\InstaLike\InstaLike_c#\InstaLike\bin\Debug\InstaLike.exe.co
 C:\Users\qnfpd\insta\InstaLike\InstaLike_c#\InstaLike\bin\Debug\InstaLike.exe
 C:\Users\qnfpd\insta\InstaLike\InstaLike_c#\InstaLike\bin\Debug\InstaLike.pdb
 C:\Users\qnfpd\insta\InstaLike\InstaLike_c#\InstaLike\bin\Debug\WebDriver.dll
-C:\Users\qnfpd\insta\InstaLike\InstaLike_c#\InstaLike\bin\Debug\WebDriver.xml
 C:\Users\qnfpd\insta\InstaLike\InstaLike_c#\InstaLike\obj\Debug\InstaLike.csproj.AssemblyReference.cache
 C:\Users\qnfpd\insta\InstaLike\InstaLike_c#\InstaLike\obj\Debug\InstaLike.Form1.resources
 C:\Users\qnfpd\insta\InstaLike\InstaLike_c#\InstaLike\obj\Debug\InstaLike.Properties.Resources.resources

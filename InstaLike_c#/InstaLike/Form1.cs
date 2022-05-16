@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Threading;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace InstaLike
@@ -37,14 +36,13 @@ namespace InstaLike
                     {
                         _service = ChromeDriverService.CreateDefaultService();
                         _service.HideCommandPromptWindow = true;
+                        _service.EnableAppendLog = false;
+                        _service.EnableVerboseLogging = false;
                         _driver = new ChromeDriver(_service);
-
-                        url = "https://www.instagram.com";
                     }
                     //로그인
-                    _driver.Navigate().GoToUrl(url);
+                    _driver.Navigate().GoToUrl("https://www.instagram.com");
                     _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
                     var email_box = _driver.FindElement(By.Name("username"));
                     email_box.SendKeys(input_email.Text);
                     var pass_box = _driver.FindElement(By.Name("password"));
@@ -93,8 +91,10 @@ namespace InstaLike
         public void Form_Closing(object sender, FormClosedEventArgs e)
         {
             lb_state.Text = "종료중";
-            if(_driver != null)
-                _driver.Close();
+            if (_driver != null)
+            {
+                _driver.Quit();
+            }
         }
 
         //2차비번 여부
