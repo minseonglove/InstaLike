@@ -134,6 +134,7 @@ namespace InstaLike
             if (login_flag)
             {
                 Random rand = new Random();
+                int errorCode = 0;
                 try
                 {
                     //먼저 돌리던게 있으면 강제 종료가 될 것
@@ -143,8 +144,10 @@ namespace InstaLike
                     while (is_running) { }
                     url = "https://www.instagram.com/explore/tags/" + input_tag.Text;
                     _driver.Navigate().GoToUrl(url);
-                    var image_btn = _driver.FindElement(By.CssSelector("#react-root > section > main > article > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1) > a"));
-                    image_btn.Click();
+                    errorCode = 1;
+                    var image_btn = _driver.FindElements(By.TagName("a"));
+                    image_btn[0].Click();
+                    errorCode = 2;
                     Thread th = new Thread(() =>
                     {
                         //검색버튼으로 인한 강제 정지
@@ -167,6 +170,7 @@ namespace InstaLike
                                 if (label.Equals("좋아요") && svgs[i].GetAttribute("color").Equals("#262626"))
                                 {
                                     svgs[i].FindElement(By.XPath("..")).FindElement(By.XPath("..")).FindElement(By.XPath("..")).Click();
+                                    errorCode = 3;
                                     likeCheck = true;
                                 }
                                 else if (label.Equals("다음"))
@@ -179,6 +183,7 @@ namespace InstaLike
                             }
                             Thread.Sleep(min_sleep + rand.Next(max_sleep - min_sleep));
                             nextBtn.Click();
+                            errorCode = 4;
                             Thread.Sleep(min_sleep + rand.Next(max_sleep - min_sleep));
                             limit--;
                             //일지정지용 무한루프
@@ -195,7 +200,23 @@ namespace InstaLike
                 }
                 catch (Exception E)
                 {
-                    lb_state.Text = "그런 태그 없어!";
+                    string errorString = "";
+                    switch(errorCode)
+                    {
+                        case 1:
+                            errorString = "그런 태그 없어!";
+                            break;
+                        case 2:
+                            errorString = "게시글 열기 실패";
+                            break;
+                        case 3:
+                            errorString = "좋아요 클릭 실패";
+                            break;
+                        case 4:
+                            errorString = "다음 게시글 열기 실패";
+                            break;
+                    }
+                    lb_state.Text = errorString;
                 }
             }
             else // 로그인안함
