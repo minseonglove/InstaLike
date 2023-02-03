@@ -167,16 +167,20 @@ namespace InstaLike
                             for (int i = 0; i < svgs.Count; i++)
                             {
                                 string label = svgs[i].GetAttribute("aria-label");
-                                if (label.Equals("좋아요") && svgs[i].GetAttribute("color").Equals("#262626"))
+                                if (label.Equals("다음"))
+                                {
+                                    nextBtn = svgs[i].FindElement(By.XPath("..")).FindElement(By.XPath("..")).FindElement(By.XPath(".."));
+                                    nextBtnCheck = true;
+                                }
+                                else if (label.Equals("좋아요 취소"))
+                                {
+                                    likeCheck = true;
+                                }
+                                else if (!likeCheck && label.Equals("좋아요") && svgs[i].GetAttribute("color").Equals("#262626"))
                                 {
                                     svgs[i].FindElement(By.XPath("..")).FindElement(By.XPath("..")).FindElement(By.XPath("..")).Click();
                                     errorCode = 3;
                                     likeCheck = true;
-                                }
-                                else if (label.Equals("다음"))
-                                {
-                                    nextBtn = svgs[i].FindElement(By.XPath("..")).FindElement(By.XPath("..")).FindElement(By.XPath(".."));
-                                    nextBtnCheck = true;
                                 }
                                 if (likeCheck && nextBtnCheck)
                                     break;
