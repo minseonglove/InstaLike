@@ -145,7 +145,7 @@ namespace InstaLike
                     url = "https://www.instagram.com/explore/tags/" + input_tag.Text;
                     _driver.Navigate().GoToUrl(url);
                     errorCode = 1;
-                    var image_btn = _driver.FindElements(By.TagName("a"));
+                    var image_btn = _driver.FindElement(By.TagName("article")).FindElements(By.TagName("a"));
                     image_btn[0].Click();
                     errorCode = 2;
                     Thread th = new Thread(() =>
@@ -237,13 +237,16 @@ namespace InstaLike
 
         public static void CrossThread(Control item, String msg)
         {
-            item.Text = msg;
             if (item.InvokeRequired)
             {
                 item.BeginInvoke((System.Action)(() =>
                 {
                     item.Text = msg;
                 }));
+            } 
+            else
+            {
+                item.Text = msg;
             }
         }
 
