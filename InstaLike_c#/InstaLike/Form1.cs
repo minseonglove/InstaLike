@@ -176,7 +176,7 @@ namespace InstaLike
                                 {
                                     likeCheck = true;
                                 }
-                                else if (!likeCheck && label.Equals("좋아요") && svgs[i].GetAttribute("color").Equals("#262626"))
+                                else if (!likeCheck && label.Equals("좋아요"))
                                 {
                                     svgs[i].FindElement(By.XPath("..")).FindElement(By.XPath("..")).FindElement(By.XPath("..")).Click();
                                     errorCode = 3;
